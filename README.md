@@ -11,7 +11,7 @@
 ![有附件例子_](https://s1.ax1x.com/2018/04/15/CekzWt.png)  
 ### 依赖   
 [requests](http://docs.python-requests.org/en/master/)  
-[bs4](https://www.crummy.com/software/BeautifulSoup/)  
+[beautifulsoup4](https://www.crummy.com/software/BeautifulSoup/)  
 ### 使用方法  
 1. clone 此仓库到本地  
 2. 使用 pip 安装上述依赖  `pip install requests beautifulsoup4`

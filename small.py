@@ -93,8 +93,8 @@ def main():
         count += 1
 
         file_name = '[{}][{}][{}]'.format(value['department'], value['title'], value['create_time'])
-        #file_name = file_name.replace('/', '')
-        #file_name = file_name.replace('\\', '')
+        file_name = file_name.replace('/', '')
+        file_name = file_name.replace('\\', '')
 
         text_save_path = os.path.join(page_dir_path ,file_name + '.txt')
         text = get_text(key)

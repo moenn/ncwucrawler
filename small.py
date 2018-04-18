@@ -99,7 +99,7 @@ def main():
         text_save_path = os.path.join(page_dir_path ,file_name + '.txt')
         text = get_text(key)
 
-        with open(text_save_path, 'w') as f:
+        with open(text_save_path, 'w', encoding='utf-8') as f:
             print("get {} ".format(key))
             f.write(text)
     print("---------------------------\n")

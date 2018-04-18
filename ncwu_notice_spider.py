@@ -83,7 +83,6 @@ def create_pageurl_list(startpage_num,endpage_num):
     return pageurl_list
 
 
-
 def get_data_from_pageurl(pageurl):
     '''
     visit a page url, and return a dict which includes 12 notices's data.  
@@ -97,7 +96,6 @@ def get_data_from_pageurl(pageurl):
     data = {'http://www5.ncwu.edu.cn/contents/{}.html'.format(n.group(2)):{'department': n.group(1),'title': n.group(3), 'href': 'http://www5.ncwu.edu.cn/contents/{}.html'.format(n.group(2)), 'create_time':n.group(4)} for n in result}
 
     return data
-
 
 
 def get_text_and_upload_href(noticeurl):
@@ -125,7 +123,6 @@ def get_text_and_upload_href(noticeurl):
         upload_href = {}
 
     return text, upload_href
-
 
 def add_text_and_upload_href(data):
     for key in data.keys():
@@ -166,7 +163,7 @@ def download(data, root_dir):
             text_save_path = os.path.join(page_dir_path ,file_name, file_name)
             
             # print("save {}...\n".format(text_save_path))
-            with open(text_save_path + '.txt', 'w') as f:
+            with open(text_save_path + '.txt', 'w', encoding='utf-8') as f:
                 f.write(value['text'])
             
             # save upload file
@@ -183,7 +180,7 @@ def download(data, root_dir):
         else:
             text_save_path = os.path.join(page_dir_path, file_name)
             # print("save {}...\n".format(text_save_path))
-            with open(text_save_path + '.txt', 'w') as f:
+            with open(text_save_path + '.txt', 'w', encoding='utf-8') as f:
                 f.write(value['text'])       
 
         time.sleep(5)

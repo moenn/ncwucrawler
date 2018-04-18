@@ -1,3 +1,5 @@
+#!/usr/bin/python
+# -*- coding: <encoding name> -*-
 import requests
 import re
 import json

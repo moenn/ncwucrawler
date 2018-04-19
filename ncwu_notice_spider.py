@@ -140,15 +140,15 @@ def get_data_from_pageurl_list(pageurl_list):
 
     return result
 
-def download(data, root_dir):
+def download(data, startpage_num, root_dir):
     count = 0
-    page = 1
+    
     for key,value in data.items():
 
         if count%12 == 0:
-            page_dir_path = os.path.join(root_dir, 'notice_5_' + str(page))
+            page_dir_path = os.path.join(root_dir, 'notice_5_' + str(startpage_num))
             os.mkdir(page_dir_path)
-            page += 1
+            startpage_num += 1
         count += 1
 
         file_name = '[{}][{}][{}]'.format(value['department'], value['title'], value['create_time'])
@@ -220,7 +220,7 @@ def main():
 
     data = get_data_from_pageurl_list(pageurl_list)
     data = add_text_and_upload_href(data)
-    download(data, root_dir)
+    download(data, startpage_num, root_dir)
 
 
     print('----------------------------------\n')

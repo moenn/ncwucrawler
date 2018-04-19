@@ -112,9 +112,21 @@ def get_data_from_pageurl(pageurl):
     return data
 
 
+def get_data_from_pageurl_list(pageurl_list):
+    result = {}
+
+    for n in map(get_data_from_pageurl, pageurl_list):
+        result.update(n)
+
+    return result
+
 def get_text_and_upload_href(noticeurl):
     resp = requests.get(noticeurl, headers=HEADERS)
-    soup = BeautifulSoup(resp.content, 'lxml')
+    try:
+        soup = BeautifulSoup(resp.content, 'lxml')
+    except:
+        soup = BeautifulSoup(resp.content, 'html.parser')
+
     # get text
     # children includes tag and navigablestring
     xinxi_con_children = soup.find('div', class_='xinxi_con').children
@@ -149,13 +161,7 @@ def add_text_and_upload_href(data):
     return data
 
 
-def get_data_from_pageurl_list(pageurl_list):
-    result = {}
 
-    for n in map(get_data_from_pageurl, pageurl_list):
-        result.update(n)
-
-    return result
 
 
 def download(data, startpage_num, root_dir):

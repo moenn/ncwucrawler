@@ -17,7 +17,7 @@ python3
 ### 使用方法  
 1. clone 此仓库到本地  
 2. 使用 pip 安装上述依赖  `pip install requests beautifulsoup4 lxml`  
-3. 打开命令行， cd 到 ncwu_crawler 目录  ，输入 notice.py 运行。  
+3. 打开命令行， cd 到 ncwu_crawler 目录  ，输入 python notice.py 运行。  
 4. 根据程序提示输入相应参数即可。  
 ### 测试平台  
 ubuntu 16.04  

@@ -37,23 +37,23 @@ class TestNotice(unittest.TestCase):
         self.assertTrue(data['http://www5.ncwu.edu.cn/contents/13/45927.html']
                         ['title'] == '关于我校2017-2018学年第二学期国家助学金复核结果公示的通知')
 
-    def test_get_text_and_upload_href(self):
-        text, upload_href = get_text_and_upload_href(
+    def test_get_text_and_upload(self):
+        text, upload = get_text_and_upload(
             'http://www5.ncwu.edu.cn/contents/11/45585.html')
         self.assertTrue(isinstance(text, str))
-        self.assertTrue(isinstance(upload_href, dict))
+        self.assertTrue(isinstance(upload, dict))
 
         self.assertTrue('为保障教职工身心健康' in text)
-        self.assertTrue(len(upload_href) == 1)
+        self.assertTrue(len(upload) == 1)
         self.assertTrue(
-            upload_href['http://www5.ncwu.edu.cn/upload/files/2018/3/1985521573.docx'] == '男女教职工体检项目.docx')
+            upload['http://www5.ncwu.edu.cn/upload/files/2018/3/1985521573.docx'] == '男女教职工体检项目.docx')
 
-    def test_add_text_and_upload_href(self):
-        data = add_text_and_upload_href(get_data_from_pageurl(
+    def test_add_text_and_upload(self):
+        data = add_text_and_upload(get_data_from_pageurl(
             'http://www5.ncwu.edu.cn/channels/5_2.html'))
         self.assertTrue(
             '校工会决定在全校开展2018年度“文明家庭”评选工' in data['http://www5.ncwu.edu.cn/contents/11/45920.html']['text'])
-        self.assertTrue(data['http://www5.ncwu.edu.cn/contents/11/45920.html']['upload_href']
+        self.assertTrue(data['http://www5.ncwu.edu.cn/contents/11/45920.html']['upload']
                             ['http://www5.ncwu.edu.cn/upload/files/2018/4/1219324962.docx']
                         == '评选标准.docx')
 

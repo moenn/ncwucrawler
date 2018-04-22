@@ -74,7 +74,19 @@ def get_user_param(ENDPAGE_MAXNUM):
         else:
             break
 
-    return startpage_num, endpage_num
+    while True:
+        user_input_raw = input("下载通知附件，请输入 1 ；不下载通知附件，请直接按回车. :\n")
+        if user_input_raw == "":
+            upload_flag = 0
+            break
+        elif int(user_input_raw) == 1:
+            upload_flag = 1
+            break
+        else:
+            print("输入有误，输入数字1或直接按回车\n")
+            continue
+
+    return startpage_num, endpage_num, upload_flag
 
 
 def create_pageurl_list(startpage_num, endpage_num):
@@ -176,9 +188,17 @@ def add_text_and_upload(data):
     return data
 
 
+def save_text(text_save_path, text):
+    print("save {}...\n".format(text_save_path))
+    with open(text_save_path + '.txt', 'w', encoding='utf-8') as f:
+        f.write(text)   
 
+def save_upload(upload_save_path, href):
+    print("save {}... \n".format(upload_save_path))
+    with open(upload_save_path, 'wb') as f:
+        f.write(requests.get(href).content)
 
-def download(data, root_dir):
+def download(data, root_dir, upload_flag):
 
     for key, value in data.items():
 
@@ -193,31 +213,33 @@ def download(data, root_dir):
         file_name = file_name.replace('\\', '')
 
         # upload file existed, create a dir to save text and upload file
-        if value['upload']:
-            save_dir_path = os.path.join(page_dir_path, file_name)
-            os.mkdir(save_dir_path)
-            text_save_path = os.path.join(page_dir_path, file_name, file_name)
+        if upload_flag == 1:
+            if value['upload']:
+                save_dir_path = os.path.join(page_dir_path, file_name)
+                os.mkdir(save_dir_path)
+                # save text
+                text_save_path = os.path.join(page_dir_path, file_name, file_name)
+                text = value['text']
+                save_text(text_save_path, text)
 
-            print("save {}...\n".format(text_save_path))
-            with open(text_save_path + '.txt', 'w', encoding='utf-8') as f:
-                f.write(value['text'])
+                
+                # save upload file
+                for href, name in value['upload'].items():
+                    try:
+                        upload_save_path = os.path.join(save_dir_path, name)
+                        save_upload(upload_save_path, href)
+                    except:
+                        logging.critical('下载 {}[{}] 附件失败\n'.format(name, href))
 
-            # save upload file
-            for href, name in value['upload'].items():
-                try:
-                    save_path = os.path.join(save_dir_path, name)
-                    print("save {}... \n".format(save_path))
-                    with open(save_path, 'wb') as f:
-                        f.write(requests.get(href).content)
-                except:
-                    logging.critical('下载 {}[{}] 附件失败\n'.format(name, href))
-
-        # no upload file , only save text
+            # no upload file , only save text
+            else:
+                text_save_path = os.path.join(page_dir_path, file_name)
+                text = value['text']
+                save_text(text_save_path, text)
         else:
             text_save_path = os.path.join(page_dir_path, file_name)
-            print("save {}...\n".format(text_save_path))
-            with open(text_save_path + '.txt', 'w', encoding='utf-8') as f:
-                f.write(value['text'])
+            text = value['text']
+            save_text(text_save_path, text)
 
         time.sleep(2)
 
@@ -240,7 +262,7 @@ def main():
 
     print("获取到的页面范围为 (1 - {}) ，在输入范围时请不要超过。\n".format(ENDPAGE_MAXNUM))
 
-    startpage_num, endpage_num = get_user_param(ENDPAGE_MAXNUM)
+    startpage_num, endpage_num, upload_flag = get_user_param(ENDPAGE_MAXNUM)
 
     pageurl_list = create_pageurl_list(startpage_num, endpage_num)
 
@@ -258,7 +280,7 @@ def main():
 
     data = get_data_from_pageurl_list(pageurl_list)
     data = add_text_and_upload(data)
-    download(data, root_dir)
+    download(data, root_dir, upload_flag)
 
     print('----------------------------------\n')
     print("下载完成，下载文件夹路径为: {}\n".format(root_dir_fullpath))

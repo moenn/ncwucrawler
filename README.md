@@ -1,4 +1,4 @@
-## [ncwu_notice_spider.py](https://github.com/mozjiang/ncwu_crawler/blob/master/ncwu_notice_spider.py)  
+## [notice.py](https://github.com/mozjiang/ncwu_crawler/blob/master/notice.py)  
 ### 功能  
 爬取华北水利水电大学的[通知页面](http://www5.ncwu.edu.cn/channels/5.html)，可指定开始页面和结束页面。  
 ### 爬取格式:  
@@ -10,13 +10,14 @@
 内容:  
 ![有附件例子_](https://s1.ax1x.com/2018/04/15/CekzWt.png)  
 ### 依赖   
+python3  
 [requests](http://docs.python-requests.org/en/master/)  
 [beautifulsoup4](https://www.crummy.com/software/BeautifulSoup/)  
 [lxml](http://lxml.de/)
 ### 使用方法  
 1. clone 此仓库到本地  
 2. 使用 pip 安装上述依赖  `pip install requests beautifulsoup4 lxml`  
-3. 打开命令行， cd 到 ncwu_crawler 目录  ，输入 python ncwu_notice_spider.py 运行。  
+3. 打开命令行， cd 到 ncwu_crawler 目录  ，输入 notice.py 运行。  
 4. 根据程序提示输入相应参数即可。  
 ### 测试平台  
 ubuntu 16.04  

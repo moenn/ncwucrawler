@@ -7,7 +7,7 @@
 依赖:
 requests
 bs4
-lxml
+lxml(optional)
 2018/4/15
 '''
 
@@ -22,16 +22,9 @@ from datetime import datetime
 from bs4 import BeautifulSoup
 
 HEADERS = {
-    # "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8", # noqa
-    # "Accept-Encoding": "gzip, deflate",
-    # "Accept-Language": "zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7,ja;q=0.6",
     "Cache-Control": "no-cache",
     "Connection": "keep-alive",
-    # "Cookie": "pgv_pvi=8494895104",
-    # "Cookie": "",
     "Host": "www5.ncwu.edu.cn",
-    # "Pragma": "no-cache",
-    # "Referer": "http://www5.ncwu.edu.cn/channels/4.html",
     "Referer": "www5.ncwu.edu.cn",
     "Upgrade-Insecure-Requests": "1",
     "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36",  # noqa
@@ -39,7 +32,6 @@ HEADERS = {
 
 HOMEURL = "http://www5.ncwu.edu.cn/channels/5.html"
 
-# INTERVAL = 5
 
 def get_endpage_maxnum(homeurl):
     resp = requests.get(homeurl, headers=HEADERS)
@@ -166,7 +158,7 @@ def get_text_and_upload(noticeurl):
     # get upload
 
     upload_pattern = re.compile(r'http://www5.ncwu.edu.cn/upload/.+')
-    # string_pattern = re.compile(r'^(?!附件\d+).*$')
+    # upload_pattern = re.compile(r'^(?!附件\d+).*$')
 
     upload_result = soup.find_all('a', href=upload_pattern)
 
@@ -270,7 +262,6 @@ def main():
     print("初始化完成,设置为：\n")
     print("页面总范围：1 - {} \n".format(ENDPAGE_MAXNUM))
     print("下载范围：{} - {} \n".format(startpage_num, endpage_num))
-    # print("睡眠间隔：{}s \n".format(INTERVAL))
     print("下载文件夹路径 : {}\n".format(root_dir_fullpath))
     print("log file 路径 :{} \n".format(log_full_path))
     print("程序将在 5 s 后开始下载...\n")
@@ -289,7 +280,4 @@ def main():
 
 if __name__ == '__main__':
     main()
-    # pageurl_list = create_pageurl_list(120, 121)
-    # data = get_data_from_pageurl_list(pageurl_list)
-    # for k, v in data.items():
-    #     print(k, v['page_num'],'\n')
+

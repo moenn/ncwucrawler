@@ -30,8 +30,8 @@ HEADERS = {
 def get_data_from_pageurl_list(pageurl_list):
     result = {}
 
-    for n in map(get_data_from_pageurl, pageurl_list):
-        result.update(n)
+    for pageurl in pageurl_list:
+        result.update(get_data_from_pageurl(pageurl))
 
     return result
 
@@ -41,20 +41,37 @@ def get_data_from_pageurl(pageurl):
     visit a page url, and return a dict which includes 12 notices's data.  
     '''
     print("resolve {}...\n".format(pageurl))
+
+    if pageurl == 'http://www5.ncwu.edu.cn/channels/5.html':
+        page_num = 1
+    else:
+        page_num = re.search(r'http://www5.ncwu.edu.cn/channels/5_(?P<page_num>\d+).html', pageurl).group('page_num')
+
     resp = requests.get(pageurl, headers=HEADERS)
     resp.encoding = 'utf-8'
     pattern = re.compile(
         # department
-        r'<li>\s+【<a href="http://www5.ncwu.edu.cn/channels/\d*.html" class="dw">(.+)'
+        r'<li>\s+【<a href="http://www5.ncwu.edu.cn/channels/\d*.html" class="dw">(?P<department>.+)'
         # href
-        r'</a>】\s+<a href="http://www5.ncwu.edu.cn/contents/(.+)\.html"'
-        r' target="_blank"><span> (.+) </span> </a><i>(\d{4}-\d{2}-\d{2})</i></li>')  # title and create_time
-    # get iter of matches include (department, href, title, create_time) information
-    result = re.finditer(pattern, resp.text)
+        r'</a>】\s+<a href="http://www5.ncwu.edu.cn/contents/(?P<href>.+)\.html"'
+        # title and create_time
+        r' target="_blank"><span> (?P<title>.+) </span> </a><i>(?P<create_time>\d{4}-\d{2}-\d{2})</i></li>'
+    )
+    matches = re.finditer(pattern, resp.text)
 
-    data = {'http://www5.ncwu.edu.cn/contents/{}.html'.format(n.group(2)):{'department': n.group(1), 'title': n.group(3), 'href': 'http://www5.ncwu.edu.cn/contents/{}.html'.format(n.group(2)), 'create_time': n.group(4)} for n in result}
+    data = {}
+    for match in matches:
+        href = "http://www5.ncwu.edu.cn/contents/{}.html".format(match.group('href'))
+        data[href] = {}
+        
+        data[href]['page_num'] = page_num
+        data[href]['department'] = match.group('department')
+        data[href]['title'] = match.group('title')
+        data[href]['href'] = href
+        data[href]['create_time'] = match.group('create_time')
 
     return data
+
 
 
 def get_text(noticeurl):
@@ -83,42 +100,46 @@ def create_pageurl_list(startpage_num, endpage_num):
     return pageurl_list
 
 
-def main():
-    root_dir = datetime.now().strftime('%Y%m%d_%H_%M_%S_ncwu_notice')
-    os.mkdir(root_dir)
+# def main():
+#     root_dir = datetime.now().strftime('%Y%m%d_%H_%M_%S_ncwu_notice')
+#     os.mkdir(root_dir)
 
-    startpage_num = 1
-    endpage_num = 10
+#     startpage_num = 1
+#     endpage_num = 10
 
-    pageurl_list = create_pageurl_list(startpage_num, endpage_num)
+#     pageurl_list = create_pageurl_list(startpage_num, endpage_num)
 
-    data = get_data_from_pageurl_list(pageurl_list)
+#     data = get_data_from_pageurl_list(pageurl_list)
 
-    count = 0
-    page = 1
-    for key, value in data.items():
+#     count = 0
+#     page = 1
+#     for key, value in data.items():
 
-        if count % 12 == 0:
-            page_dir_path = os.path.join(root_dir, 'notice_5_' + str(page))
-            os.mkdir(page_dir_path)
-            page += 1
-        count += 1
+#         if count % 12 == 0:
+#             page_dir_path = os.path.join(root_dir, 'notice_5_' + str(page))
+#             os.mkdir(page_dir_path)
+#             page += 1
+#         count += 1
 
-        file_name = '[{}][{}][{}]'.format(
-            value['department'], value['title'], value['create_time'])
-        file_name = file_name.replace('/', '')
-        file_name = file_name.replace('\\', '')
+#         file_name = '[{}][{}][{}]'.format(
+#             value['department'], value['title'], value['create_time'])
+#         file_name = file_name.replace('/', '')
+#         file_name = file_name.replace('\\', '')
 
-        text_save_path = os.path.join(page_dir_path, file_name + '.txt')
-        text = get_text(key)
+#         text_save_path = os.path.join(page_dir_path, file_name + '.txt')
+#         text = get_text(key)
 
-        with open(text_save_path, 'w', encoding='utf-8') as f:
-            print("get {} ".format(key))
-            f.write(text)
-    print("---------------------------\n")
-    print("download completed. download dir path : {} \n".format(
-        os.path.join(os.getcwd(), root_dir)))
+#         with open(text_save_path, 'w', encoding='utf-8') as f:
+#             print("get {} ".format(key))
+#             f.write(text)
+#     print("---------------------------\n")
+#     print("download completed. download dir path : {} \n".format(
+#         os.path.join(os.getcwd(), root_dir)))
 
 
 if __name__ == '__main__':
-    main()
+    # main()
+    url = 'http://www5.ncwu.edu.cn/channels/5_2.html'
+    pageurl_list = create_pageurl_list(1, 2)
+    result = get_data_from_pageurl_list(pageurl_list)
+    print(result)

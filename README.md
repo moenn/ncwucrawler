@@ -15,10 +15,10 @@ python3
 [beautifulsoup4](https://www.crummy.com/software/BeautifulSoup/)  
 [lxml](http://lxml.de/)
 ### 使用方法  
-1. clone 此仓库到本地  
-2. 使用 pip 安装上述依赖  `pip install requests beautifulsoup4 lxml`  
-3. 打开命令行， cd 到 ncwu_crawler 目录  ，输入 python notice.py 运行。  
-4. 根据程序提示输入相应参数即可。  
+1. clone 此仓库到本地   
+2. 打开命令行， cd 到仓库目录 ncwu_crawler    
+3. pip 安装依赖  `pip install -r requirements`  
+4. 输入 python notice.py 运行  
 ### 测试平台  
 ubuntu 16.04  
 Windows 8,10  
